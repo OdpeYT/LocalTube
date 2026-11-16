@@ -50,20 +50,3 @@ automáticamente Debian/Ubuntu (`apt`), Fedora (`dnf`), Arch (`pacman`) y
 openSUSE (`zypper`). En otras distribuciones instala manualmente GTK3,
 WebKitGTK 4.1, librsvg, OpenSSL y libxdo (paquetes de desarrollo) antes de
 ejecutarlo.
-
-## Subir este proyecto a GitHub
-
-El repositorio local ya está inicializado y tiene un commit. Crea en GitHub un
-repositorio vacío llamado `localtube` y, desde la carpeta del proyecto, ejecuta:
-
-```sh
-git branch -M main
-git remote add origin https://github.com/OdpeYT/localtube.git
-git push -u origin main
-```
-
-Si ya configuraste `origin`, no repitas `git remote add origin`; compruébalo con
-`git remote -v` y usa `git push -u origin main`.
-
-Los directorios `node_modules`, `dist` y los artefactos compilados de Rust no se
-suben al repositorio.
