@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090b10" />
+    <title>LocalTube Liquid Glass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <div class="mesh-bg" aria-hidden="true">
+      <div class="mesh-blob blob-1"></div>
+      <div class="mesh-blob blob-2"></div>
+      <div class="mesh-blob blob-3"></div>
+    </div>
+
+    <input id="localVideoUpload" type="file" accept="video/*" multiple hidden />
+
+    <header class="app-bar liquid-glass">
+      <button class="brand" id="home-button" type="button" title="Ir al inicio" aria-label="LocalTube, inicio">
+        <span class="brand-mark">
+          <img src="/localtube-logo.png" alt="LocalTube" />
+        </span>
+      </button>
+
+      <label class="search-box">
+        <span class="material-symbols-rounded">search</span>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Buscar por nombre en almacenamiento..."
+          autocomplete="off"
+        />
+        <button id="clearSearchBtn" class="icon-button clear-search hidden" type="button" title="Limpiar búsqueda">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </label>
+
+      <div class="bar-actions">
+        <button id="theme-button" class="icon-button liquid-glass" type="button" title="Cambiar tema">
+          <span id="themeIcon" class="material-symbols-rounded">light_mode</span>
+        </button>
+        <button id="upload-button" class="primary-button" type="button">
+          <span>Subir</span>
+          <span class="material-symbols-rounded">add</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section id="libraryView" class="view">
+        <div class="library-heading">
+          <div>
+            <h1>
+              Biblioteca de videos locales
+              <span id="videoCountBadge" class="count-badge">0 videos</span>
+            </h1>
+            <p>Tu colección privada, organizada en un solo lugar.</p>
+          </div>
+          <div class="filter-chips" aria-label="Filtrar videos">
+            <button class="filter-chip active" type="button" data-filter="all">Todos</button>
+            <button class="filter-chip liquid-glass" type="button" data-filter="mp4">.MP4</button>
+            <button class="filter-chip liquid-glass" type="button" data-filter="mkv">.MKV</button>
+            <button class="filter-chip liquid-glass favorite-filter" type="button" data-filter="favorites">
+              <span class="material-symbols-rounded">favorite</span>
+              Favoritos
+            </button>
+          </div>
+        </div>
+
+        <section class="folder-panel liquid-glass" aria-label="Escanear una carpeta">
+          <div class="folder-copy">
+            <span class="folder-icon material-symbols-rounded">folder_open</span>
+            <div>
+              <h2>Explora tus videos locales</h2>
+              <p>Escribe la ruta de una carpeta para agregar sus videos a la biblioteca.</p>
+            </div>
+          </div>
+          <form id="scan-form" class="folder-controls">
+            <input id="folder-path" name="folder-path" type="text" placeholder="/home/usuario/Videos" required />
+            <button id="scan-button" class="scan-button" type="submit">
+              <span class="material-symbols-rounded">sync</span>
+              Escanear
+            </button>
+          </form>
+        </section>
+
+        <button id="dropZone" class="drop-zone liquid-glass" type="button">
+          <span class="drop-icon material-symbols-rounded">upload_file</span>
+          <span class="drop-copy">
+            <strong>Arrastra tus videos aquí o haz clic para seleccionarlos</strong>
+            <small>Soporta MP4, MKV, WebM y MOV. Tus archivos permanecen en tu equipo.</small>
+          </span>
+          <span class="browse-button">Examinar dispositivo</span>
+        </button>
+
+        <p id="scan-status" class="status-message" role="status" aria-live="polite">
+          Preparando tu biblioteca…
+        </p>
+        <div id="videoGrid" class="video-grid"></div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <span class="empty-icon material-symbols-rounded">video_library</span>
+          <h2>No se encontraron videos</h2>
+          <p>Prueba otra búsqueda, cambia de filtro o selecciona una carpeta que contenga videos.</p>
+          <button id="reset-library-button" class="primary-button" type="button">Ver biblioteca completa</button>
+        </div>
+      </section>
+
+      <section id="playerView" class="view player-view hidden">
+        <div class="player-nav">
+          <button id="back-button" class="glass-button" type="button">
+            <span class="material-symbols-rounded">arrow_back</span>
+            Volver a la biblioteca
+          </button>
+          <button id="playerFavBtn" class="glass-button" type="button">
+            <span id="playerFavIcon" class="material-symbols-rounded">favorite</span>
+            <span id="playerFavText">Favorito</span>
+          </button>
+        </div>
+
+        <div class="player-layout">
+          <div class="player-column">
+            <div class="video-viewport liquid-glass">
+              <video id="mainVideoPlayer" controls playsinline></video>
+              <span class="player-mode">
+                <span></span>
+                Reproductor local
+              </span>
+            </div>
+            <article class="player-info liquid-glass">
+              <div class="player-title-row">
+                <div>
+                  <h2 id="playerTitle">Video local</h2>
+                  <p id="playerDate"></p>
+                </div>
+                <span id="playerSizeBadge" class="info-badge">—</span>
+              </div>
+              <div class="player-progress">
+                <span id="currentTimeText">00:00</span>
+                <div id="scrubberWrapper" class="scrubber" title="Buscar en el video">
+                  <span id="progressFill"></span>
+                  <i id="progressThumb"></i>
+                </div>
+                <span id="totalDurationText">00:00</span>
+              </div>
+              <div class="player-controls">
+                <button id="volumeButton" class="icon-button liquid-glass" type="button" title="Silenciar">
+                  <span id="volumeIcon" class="material-symbols-rounded">volume_up</span>
+                </button>
+                <input id="volumeSlider" class="glass-slider volume-slider" type="range" min="0" max="1" step="0.05" value="0.85" aria-label="Volumen" />
+                <div class="transport-controls">
+                  <button id="prev-button" class="icon-button liquid-glass" type="button" title="Anterior">
+                    <span class="material-symbols-rounded">skip_previous</span>
+                  </button>
+                  <button id="mainPlayPauseBtn" class="play-button" type="button" title="Reproducir o pausar">
+                    <span id="mainPlayPauseIcon" class="material-symbols-rounded">play_arrow</span>
+                  </button>
+                  <button id="next-button" class="icon-button liquid-glass" type="button" title="Siguiente">
+                    <span class="material-symbols-rounded">skip_next</span>
+                  </button>
+                </div>
+                <button id="speedBtn" class="glass-button speed-button" type="button">1.0x</button>
+                <button id="fullscreen-button" class="icon-button liquid-glass" type="button" title="Pantalla completa">
+                  <span class="material-symbols-rounded">fullscreen</span>
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <aside class="side-panel liquid-glass">
+            <div class="side-tabs">
+              <button id="tabQueueBtn" class="side-tab active" type="button" data-tab="queue">
+                <span class="material-symbols-rounded">queue_music</span> Cola local
+              </button>
+              <button id="tabExifBtn" class="side-tab" type="button" data-tab="exif">
+                <span class="material-symbols-rounded">info</span> Detalles
+              </button>
+            </div>
+            <div id="queueTabContent" class="queue-content">
+              <div class="side-heading">
+                <span>VIDEOS EN SESIÓN</span>
+                <button id="queue-add-button" type="button">Añadir más</button>
+              </div>
+              <div id="queueList" class="queue-list"></div>
+            </div>
+            <div id="exifTabContent" class="details-content hidden">
+              <div class="details-card">
+                <div class="details-heading">
+                  <span class="material-symbols-rounded">verified</span>
+                  DETALLES DEL ARCHIVO
+                </div>
+                <div class="detail-row"><span>Ubicación</span><strong id="exifLocation">No disponible</strong></div>
+                <div class="detail-row"><span>Modificado</span><strong id="exifTime">—</strong></div>
+                <div class="detail-row"><span>Dispositivo</span><strong id="exifDevice">No disponible</strong></div>
+              </div>
+              <div class="details-card">
+                <div class="details-heading">
+                  <span class="material-symbols-rounded">tune</span>
+                  AJUSTES DE IMAGEN
+                </div>
+                <label class="adjustment-row">
+                  <span>Brillo <strong id="brightnessVal">100%</strong></span>
+                  <input id="brightnessSlider" class="glass-slider" type="range" min="50" max="150" value="100" />
+                </label>
+                <label class="adjustment-row">
+                  <span>Contraste <strong id="contrastVal">100%</strong></span>
+                  <input id="contrastSlider" class="glass-slider" type="range" min="50" max="150" value="100" />
+                </label>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <div id="m3Snackbar" class="snackbar" role="status" aria-live="polite"></div>
+  </body>
+</html>
