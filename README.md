@@ -1,49 +1,69 @@
-# LocalTube
+# LocalTube — app para videos locales
 
-LocalTube scans a selected local folder and lists video files with the `.mp4`,
-`.mkv`, `.webm`, and `.mov` extensions. It scans only the selected folder, not
-its subfolders.
+LocalTube es una aplicación de escritorio para organizar y ver videos guardados
+en tu equipo, con una biblioteca visual inspirada en YouTube.
 
-## Run in development
+## Qué puedes hacer
 
-From the project directory, run:
+- Buscar videos en una carpeta local. La búsqueda incluye los archivos que están
+  directamente dentro de esa carpeta, no sus subcarpetas.
+- Añadir videos desde el selector de archivos o arrastrándolos a la aplicación.
+- Ver los videos de la biblioteca en tarjetas y abrirlos con un clic.
+- Reproducirlos con controles de reproducción, volumen, velocidad y pantalla
+  completa.
+- Consultar el tamaño del archivo y su fecha de modificación.
+
+La aplicación admite archivos `.mp4`, `.mkv`, `.webm` y `.mov`. Los videos se
+mantienen en tu equipo.
+
+> **Información EXIF:** el panel de detalles está preparado para mostrar
+> información del archivo, pero la lectura de metadatos EXIF todavía no está
+> implementada. Por ahora se muestra el tamaño y la fecha de modificación; no se
+> inventan datos de cámara o ubicación cuando no se han leído del video.
+
+## Ejecutar para desarrollo
+
+Necesitas Node.js 20.19 o posterior y Rust 1.85 o posterior. Desde la carpeta
+del proyecto, ejecuta:
 
 ```sh
 npm install
 npm run tauri dev
 ```
 
-The app initially checks `Videos`, `Descargas`, or `Downloads` in your home
-folder (whichever exists first). Enter another folder path to scan it instead.
+Al iniciar, LocalTube busca una carpeta `Videos`, `Descargas` o `Downloads` en
+tu directorio personal. Puedes escribir otra ruta para escanearla.
 
-## Install on Linux Mint, Ubuntu, or Debian
+## Instalar en Linux
 
-Install Node.js 20.19 or later and Rust with `rustup`, then run:
+El instalador configura las dependencias nativas, compila la aplicación y crea
+un acceso en el menú de aplicaciones para tu usuario:
 
 ```sh
-git clone https://github.com/TU_USUARIO/localtube.git
+git clone https://github.com/OdpeYT/localtube.git
 cd localtube
-chmod +x install.sh
 ./install.sh
 ```
 
-The installer installs Tauri's Debian/Ubuntu build dependencies, builds a `.deb`
-package, and installs it. It asks for your administrator password through `sudo`.
+Se requiere `sudo` para instalar dependencias del sistema. El instalador maneja
+automáticamente Debian/Ubuntu (`apt`), Fedora (`dnf`), Arch (`pacman`) y
+openSUSE (`zypper`). En otras distribuciones instala manualmente GTK3,
+WebKitGTK 4.1, librsvg, OpenSSL y libxdo (paquetes de desarrollo) antes de
+ejecutarlo.
 
-## Upload this project to GitHub
+## Subir este proyecto a GitHub
 
-Create an empty repository on GitHub (for example, `localtube`), then run these
-commands from this project directory, replacing `TU_USUARIO` with your GitHub
-username:
+El repositorio local ya está inicializado y tiene un commit. Crea en GitHub un
+repositorio vacío llamado `localtube` y, desde la carpeta del proyecto, ejecuta:
 
 ```sh
-git init
-git add .
-git commit -m "Initial LocalTube app"
 git branch -M main
-git remote add origin https://github.com/TU_USUARIO/localtube.git
+git remote add origin https://github.com/OdpeYT/localtube.git
 git push -u origin main
 ```
 
-Do not upload `node_modules` or compiled `target` files; they are excluded by
-the project's `.gitignore`.
+Si ya configuraste `origin`, no repitas `git remote add origin`; compruébalo con
+`git remote -v` y usa `git push -u origin main`.
+
+Los directorios `node_modules`, `dist` y los artefactos compilados de Rust no se
+suben al repositorio.
